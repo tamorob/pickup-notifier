@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pick Up Notifier</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; text-align: center; padding: 40px; background: #f4f4f9; }
+        input { padding: 10px; font-size: 16px; width: 80%; max-width: 300px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; font-size: 16px; background: #007aff; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>Personalize Your Notification</h2>
+    <!-- This text box allows you to change the notification text anytime -->
+    <input type="text" id="customText" value="Put down the phone and focus!" placeholder="Enter notification text...">
+    <br>
+    <button onclick="saveText()">Save Text</button>
+
+    <script>
+        // Save personalized text to the phone
+        function saveText() {
+            localStorage.setItem('notifyText', document.getElementById('customText').value);
+            alert('Text saved!');
+        }
+
+        // Load saved text on open
+        if(localStorage.getItem('notifyText')) {
+            document.getElementById('customText').value = localStorage.getItem('notifyText');
+        }
+
+        // The background logic that checks the 10-minute rule
+        function checkNotification() {
+            const now = Date.now();
+            const lastTime = localStorage.getItem('lastPickUpTime') || 0;
+            const tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+            // If phone has been still/closed for more than 10 minutes
+            if (now - lastTime >= tenMinutes) {
+                const message = localStorage.getItem('notifyText') || "Put down the phone and focus!";
+                
+                // Trigger the iOS native banner notification via Web Notifications API
+                if (Notification.permission === "granted") {
+                    const notification = new Notification("Phone Picked Up!", { body: message });
+                    // Automatically close the notification after 5 seconds
+                    setTimeout(() => notification.close(), 5000); 
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission();
+                }
+            }
+            // Update the time stamp to right now
+            localStorage.setItem('lastPickUpTime', now);
+        }
+
+        // Run the check immediately when the automation launches this page
+        window.onload = function() {
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+            checkNotification();
+        };
+    </script>
+</body>
+</html>
