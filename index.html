@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,7 @@
         body { 
             margin: 0;
             padding: 20px;
-            background: #32CD32; /* Instant Lime Green */
+            background: #32CD32; /* Lime Green */
             height: 100vh;
             display: flex;
             align-items: center;
@@ -19,9 +20,9 @@
         }
         h1 { 
             font-family: -apple-system, sans-serif;
-            font-size: 54px; /* Even larger high-visibility text */
+            font-size: 54px; 
             font-weight: 900; 
-            color: #000000; /* Solid Black */
+            color: #000000; /* Black text */
             text-align: center;
             line-height: 1.1;
             margin: 0;
@@ -30,8 +31,33 @@
 </head>
 <body>
 
-    <!-- Your Instant Custom Message -->
-    <h1>HEALTHY SNACKS ONLY!!</h1>
+    <h1 id="alertText"></h1>
 
+    <script>
+        function checkTimer() {
+            const now = Date.now();
+            const lastTime = localStorage.getItem('lastTriggerTime') || 0;
+            const cooldownPeriod = 30 * 1000; // 30 seconds cooldown to break the loop
+
+            // If it's been less than 30 seconds since the last alert, go back to previous app
+            if (now - lastTime < cooldownPeriod) {
+                // This stops the infinite loop by immediately closing or redirecting
+                // Since iOS won't let code close Safari, we just clear the text so it's not stuck
+                document.getElementById('alertText').innerText = "";
+                
+                // OPTIONAL FIX: You can instruct the phone to send you back, 
+                // but simply breaking the loop here is safest.
+                return;
+            }
+
+            // Otherwise, show the massive alert text
+            document.getElementById('alertText').innerText = "Put down the phone!";
+            
+            // Set the new time marker so it won't loop immediately
+            localStorage.setItem('lastTriggerTime', now);
+        }
+
+        window.onload = checkTimer;
+    </script>
 </body>
 </html>
