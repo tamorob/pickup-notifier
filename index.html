@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pick Up Notifier</title>
     <style>
-        /* Change the background color and layout here */
+        /* Bold Lime Green Background */
         body { 
             font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
             text-align: center; 
             padding: 20px; 
-            background: #1e1e24; /* Dark sleek background */
-            color: #ffffff; 
+            background: #32CD32; /* Lime green background color */
+            color: #000000; /* Dark contrast element */
             margin: 0;
             height: 100vh;
             display: flex;
@@ -20,7 +19,7 @@
             justify-content: space-between;
             box-sizing: border-box;
         }
-        /* Style for your massive text alert */
+        /* Massive Centered Text Display Area */
         #alertContainer {
             flex-grow: 1;
             display: flex;
@@ -28,33 +27,38 @@
             justify-content: center;
             padding: 20px;
         }
+        /* Style for your custom text message */
         #alertText { 
-            font-size: 42px; /* Super large text */
-            font-weight: bold; 
-            color: #ff4757; /* Eye-catching coral red text */
-            line-height: 1.3;
+            font-size: 48px; /* Massive, impossible-to-miss size */
+            font-weight: 900; /* Extra bold text */
+            color: #000000; /* Solid black text */
+            line-height: 1.2;
+            letter-spacing: -1px;
         }
-        /* Settings panel at the bottom */
+        /* Custom styled translucent settings panel at bottom */
         .settings { 
-            background: rgba(255,255,255,0.1); 
+            background: rgba(0, 0, 0, 0.08); 
             padding: 20px; 
             border-radius: 16px;
             margin-bottom: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
         input { 
-            padding: 12px; 
+            padding: 14px; 
             font-size: 16px; 
             width: 85%; 
             max-width: 300px; 
             margin-bottom: 12px; 
             border-radius: 8px; 
-            border: none; 
+            border: 1px solid rgba(0,0,0,0.2); 
+            background: #ffffff;
+            color: #000000;
         }
         button { 
             padding: 12px 24px; 
             font-size: 16px; 
-            background: #007aff; 
-            color: white; 
+            background: #000000; /* Black button to match the text style */
+            color: #32CD32; /* Lime green text inside the button */
             border: none; 
             border-radius: 8px; 
             cursor: pointer; 
@@ -80,7 +84,7 @@
         function saveText() {
             localStorage.setItem('notifyText', document.getElementById('customText').value);
             alert('Message saved!');
-            location.reload(); // Refresh to show new text
+            location.reload(); 
         }
 
         // Load saved text on open
@@ -90,18 +94,16 @@
         function checkNotification() {
             const now = Date.now();
             const lastTime = localStorage.getItem('lastPickUpTime') || 0;
-            const tenMinutes = 10 * 60 * 1000; // 10 minutes
+            const tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
 
-            // If 10 minutes have passed
+            // If 10 minutes have passed since last trigger
             if (now - lastTime >= tenMinutes) {
-                // Show the massive message on screen
                 document.getElementById('alertText').innerText = savedMessage;
             } else {
-                // If it hasn't been 10 minutes, clear the message area so it stays blank/clean
                 document.getElementById('alertText').innerText = "";
             }
             
-            // Update timestamp
+            // Log current time as the new baseline timestamp
             localStorage.setItem('lastPickUpTime', now);
         }
 
@@ -109,3 +111,4 @@
     </script>
 </body>
 </html>
+
