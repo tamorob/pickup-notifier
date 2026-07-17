@@ -1,114 +1,37 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pick Up Notifier</title>
+    <title>⚡</title>
     <style>
-        /* Bold Lime Green Background */
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-            text-align: center; 
-            padding: 20px; 
-            background: #32CD32; /* Lime green background color */
-            color: #000000; /* Dark contrast element */
             margin: 0;
+            padding: 20px;
+            background: #32CD32; /* Instant Lime Green */
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-sizing: border-box;
-        }
-        /* Massive Centered Text Display Area */
-        #alertContainer {
-            flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
         }
-        /* Style for your custom text message */
-        #alertText { 
-            font-size: 48px; /* Massive, impossible-to-miss size */
-            font-weight: 900; /* Extra bold text */
-            color: #000000; /* Solid black text */
-            line-height: 1.2;
-            letter-spacing: -1px;
-        }
-        /* Custom styled translucent settings panel at bottom */
-        .settings { 
-            background: rgba(0, 0, 0, 0.08); 
-            padding: 20px; 
-            border-radius: 16px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        input { 
-            padding: 14px; 
-            font-size: 16px; 
-            width: 85%; 
-            max-width: 300px; 
-            margin-bottom: 12px; 
-            border-radius: 8px; 
-            border: 1px solid rgba(0,0,0,0.2); 
-            background: #ffffff;
-            color: #000000;
-        }
-        button { 
-            padding: 12px 24px; 
-            font-size: 16px; 
-            background: #000000; /* Black button to match the text style */
-            color: #32CD32; /* Lime green text inside the button */
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold;
+        h1 { 
+            font-family: -apple-system, sans-serif;
+            font-size: 54px; /* Even larger high-visibility text */
+            font-weight: 900; 
+            color: #000000; /* Solid Black */
+            text-align: center;
+            line-height: 1.1;
+            margin: 0;
         }
     </style>
 </head>
 <body>
 
-    <!-- Massive Text Display Area -->
-    <div id="alertContainer">
-        <div id="alertText"></div>
-    </div>
+    <!-- Your Instant Custom Message -->
+    <h1>HEALTHY SNACKS ONLY!!</h1>
 
-    <!-- Personalization Settings Area at Bottom -->
-    <div class="settings">
-        <input type="text" id="customText" value="Put down the phone!" placeholder="Enter message...">
-        <br>
-        <button onclick="saveText()">Save Message</button>
-    </div>
-
-    <script>
-        function saveText() {
-            localStorage.setItem('notifyText', document.getElementById('customText').value);
-            alert('Message saved!');
-            location.reload(); 
-        }
-
-        // Load saved text on open
-        const savedMessage = localStorage.getItem('notifyText') || "Put down the phone!";
-        document.getElementById('customText').value = savedMessage;
-
-        function checkNotification() {
-            const now = Date.now();
-            const lastTime = localStorage.getItem('lastPickUpTime') || 0;
-            const tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
-
-            // If 10 minutes have passed since last trigger
-            if (now - lastTime >= tenMinutes) {
-                document.getElementById('alertText').innerText = savedMessage;
-            } else {
-                document.getElementById('alertText').innerText = "";
-            }
-            
-            // Log current time as the new baseline timestamp
-            localStorage.setItem('lastPickUpTime', now);
-        }
-
-        window.onload = checkNotification;
-    </script>
 </body>
 </html>
-
