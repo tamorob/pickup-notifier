@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,61 +6,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pick Up Notifier</title>
     <style>
-        body { font-family: -apple-system, sans-serif; text-align: center; padding: 40px; background: #f4f4f9; }
-        input { padding: 10px; font-size: 16px; width: 80%; max-width: 300px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; }
-        button { padding: 10px 20px; font-size: 16px; background: #007aff; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        /* Change the background color and layout here */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            text-align: center; 
+            padding: 20px; 
+            background: #1e1e24; /* Dark sleek background */
+            color: #ffffff; 
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+        /* Style for your massive text alert */
+        #alertContainer {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #alertText { 
+            font-size: 42px; /* Super large text */
+            font-weight: bold; 
+            color: #ff4757; /* Eye-catching coral red text */
+            line-height: 1.3;
+        }
+        /* Settings panel at the bottom */
+        .settings { 
+            background: rgba(255,255,255,0.1); 
+            padding: 20px; 
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        input { 
+            padding: 12px; 
+            font-size: 16px; 
+            width: 85%; 
+            max-width: 300px; 
+            margin-bottom: 12px; 
+            border-radius: 8px; 
+            border: none; 
+        }
+        button { 
+            padding: 12px 24px; 
+            font-size: 16px; 
+            background: #007aff; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <h2>Personalize Your Notification</h2>
-    <!-- This text box allows you to change the notification text anytime -->
-    <input type="text" id="customText" value="Put down the phone and focus!" placeholder="Enter notification text...">
-    <br>
-    <button onclick="saveText()">Save Text</button>
+    <!-- Massive Text Display Area -->
+    <div id="alertContainer">
+        <div id="alertText"></div>
+    </div>
+
+    <!-- Personalization Settings Area at Bottom -->
+    <div class="settings">
+        <input type="text" id="customText" value="Put down the phone!" placeholder="Enter message...">
+        <br>
+        <button onclick="saveText()">Save Message</button>
+    </div>
 
     <script>
-        // Save personalized text to the phone
         function saveText() {
             localStorage.setItem('notifyText', document.getElementById('customText').value);
-            alert('Text saved!');
+            alert('Message saved!');
+            location.reload(); // Refresh to show new text
         }
 
         // Load saved text on open
-        if(localStorage.getItem('notifyText')) {
-            document.getElementById('customText').value = localStorage.getItem('notifyText');
-        }
+        const savedMessage = localStorage.getItem('notifyText') || "Put down the phone!";
+        document.getElementById('customText').value = savedMessage;
 
-        // The background logic that checks the 10-minute rule
         function checkNotification() {
             const now = Date.now();
             const lastTime = localStorage.getItem('lastPickUpTime') || 0;
-            const tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+            const tenMinutes = 10 * 60 * 1000; // 10 minutes
 
-            // If phone has been still/closed for more than 10 minutes
+            // If 10 minutes have passed
             if (now - lastTime >= tenMinutes) {
-                const message = localStorage.getItem('notifyText') || "Put down the phone and focus!";
-                
-                // Trigger the iOS native banner notification via Web Notifications API
-                if (Notification.permission === "granted") {
-                    const notification = new Notification("Phone Picked Up!", { body: message });
-                    // Automatically close the notification after 5 seconds
-                    setTimeout(() => notification.close(), 5000); 
-                } else if (Notification.permission !== "denied") {
-                    Notification.requestPermission();
-                }
+                // Show the massive message on screen
+                document.getElementById('alertText').innerText = savedMessage;
+            } else {
+                // If it hasn't been 10 minutes, clear the message area so it stays blank/clean
+                document.getElementById('alertText').innerText = "";
             }
-            // Update the time stamp to right now
+            
+            // Update timestamp
             localStorage.setItem('lastPickUpTime', now);
         }
 
-        // Run the check immediately when the automation launches this page
-        window.onload = function() {
-            if (Notification.permission !== "granted") {
-                Notification.requestPermission();
-            }
-            checkNotification();
-        };
+        window.onload = checkNotification;
     </script>
 </body>
 </html>
